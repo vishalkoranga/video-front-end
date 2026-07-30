@@ -115,9 +115,7 @@
      access: 'spool.accessToken',
      refresh: 'spool.refreshToken',
    };
-   const DEFAULT_API_BASE =
-   import.meta.env.VITE_API_BASE ||
-   'http://localhost:8000/api/v1';
+   const DEFAULT_API_BASE = "https://backend-project-eq6s.onrender.com/api/v1";
    
    function getApiBase() { return localStorage.getItem(STORAGE.base) || DEFAULT_API_BASE; }
    function setApiBase(v) { localStorage.setItem(STORAGE.base, v.replace(/\/+$/, '')); }
