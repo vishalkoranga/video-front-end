@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spool — a client for full-backend</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#/browse" class="brand">SPOOL <span class="brand-dot">●</span></a>
+
+    <nav class="nav" id="mainNav">
+      <a href="#/browse" data-nav="browse">Browse</a>
+      <a href="#/upload" data-nav="upload">Upload</a>
+      <a href="#/dashboard" data-nav="dashboard">Dashboard</a>
+      <a href="#/playlists" data-nav="playlists">Playlists</a>
+      <a href="#/liked" data-nav="liked">Liked</a>
+      <a href="#/history" data-nav="history">History</a>
+      <a href="#/subscriptions" data-nav="subscriptions">Following</a>
+    </nav>
+
+    <form class="quick-search" id="quickSearchForm">
+      <input type="search" id="quickSearchInput" placeholder="Search videos…" />
+    </form>
+
+    <div class="topbar-actions">
+      <button class="icon-btn" id="settingsBtn" type="button" title="Backend connection settings">&#9881;</button>
+      <div id="authArea"></div>
+    </div>
+  </div>
+</header>
+
+<div class="sprocket-rail" aria-hidden="true"></div>
+
+<main id="app">
+
+  <!-- ===================== AUTH ===================== -->
+  <section hidden class="view auth-view" id="view-auth">
+    <div class="auth-card">
+      <div class="auth-hero">
+        <h1 class="display-xl">SPOOL</h1>
+        <p class="text-dim">A hand-built client for your <code>full-backend</code> API. Log in or create an account to watch, upload and organize videos.</p>
+      </div>
+
+      <div class="tabs" id="authTabs">
+        <button class="tab active" data-tab="login" type="button">Log in</button>
+        <button class="tab" data-tab="register" type="button">Create account</button>
+      </div>
+
+      <form id="loginForm" class="stack-form">
+        <label class="field">
+          <span>Email or username</span>
+          <input type="text" name="identifier" required autocomplete="username" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" name="password" required autocomplete="current-password" />
+        </label>
+        <button class="btn btn-primary" type="submit">Log in</button>
+      </form>
+
+      <form id="registerForm" class="stack-form" hidden>
+        <div class="field-row">
+          <label class="field"><span>Full name</span><input type="text" name="fullName" required /></label>
+          <label class="field"><span>Username</span><input type="text" name="userName" required pattern="[a-zA-Z0-9_.]+" title="Letters, numbers, dots and underscores only" /></label>
+        </div>
+        <label class="field"><span>Email</span><input type="email" name="email" required /></label>
+        <label class="field"><span>Password</span><input type="password" name="password" required autocomplete="new-password" /></label>
+        <div class="field-row">
+          <label class="field"><span>Avatar (required)</span><input type="file" name="avatar" accept="image/*" required /></label>
+          <label class="field"><span>Cover image (optional)</span><input type="file" name="coverImage" accept="image/*" /></label>
+        </div>
+        <button class="btn btn-primary" type="submit">Create account</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===================== BROWSE ===================== -->
+  <section hidden class="view" id="view-browse">
+    <div class="view-header">
+      <h1 class="display-lg">Browse</h1>
+      <div class="toolbar">
+        <input type="search" id="browseSearchInput" placeholder="Search titles…" />
+        <select id="browseSortSelect">
+          <option value="createdAt:desc">Newest</option>
+          <option value="createdAt:asc">Oldest</option>
+          <option value="views:desc">Most viewed</option>
+          <option value="title:asc">Title A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="videoGrid"></div>
+    <div class="pager">
+      <button class="btn btn-ghost btn-sm" id="prevPageBtn" type="button">&larr; Prev</button>
+      <span id="pagerInfo" class="text-dim mono"></span>
+      <button class="btn btn-ghost btn-sm" id="nextPageBtn" type="button">Next &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ===================== VIDEO DETAIL ===================== -->
+  <section hidden class="view" id="view-video">
+    <button class="btn btn-ghost btn-sm back-btn" data-back type="button">&larr; Back</button>
+    <div class="video-layout">
+      <div class="video-main">
+        <video id="videoPlayer" class="video-player" controls></video>
+
+        <div class="video-meta-row">
+          <h1 id="videoTitle" class="display-md"></h1>
+          <div class="video-actions" id="videoActions"></div>
+        </div>
+
+        <div class="counter-row" id="videoStats"></div>
+
+        <p id="videoDescription" class="video-description"></p>
+
+        <div class="owner-card" id="videoOwnerCard"></div>
+
+        <div class="comments-block">
+          <h2 class="display-sm">Comments</h2>
+          <form id="commentForm" class="comment-form">
+            <textarea name="content" placeholder="Add a comment…" required></textarea>
+            <button class="btn btn-primary btn-sm" type="submit">Post</button>
+          </form>
+          <div id="commentList" class="comment-list"></div>
+          <div style="text-align:center; margin-top:14px;">
+            <button class="btn btn-ghost btn-sm" id="loadMoreCommentsBtn" type="button" hidden>Load more comments</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PUBLISH / EDIT VIDEO ===================== -->
+  <section hidden class="view" id="view-video-form">
+    <h1 class="display-lg" id="videoFormTitle">Publish a video</h1>
+    <form id="videoForm" class="card-form">
+      <label class="field"><span>Title</span><input type="text" name="title" required maxlength="120" /></label>
+      <label class="field"><span>Description</span><textarea name="description" required rows="5"></textarea></label>
+      <div class="field-row" id="videoFileField">
+        <label class="field"><span>Video file</span><input type="file" id="videoFileInput" accept="video/*" /></label>
+        <label class="field" id="thumbnailField"><span>Thumbnail</span><input type="file" id="thumbnailInput" accept="image/*" /></label>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit" id="videoFormSubmitBtn">Publish</button>
+        <a href="#/dashboard" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- ===================== CHANNEL ===================== -->
+  <section hidden class="view" id="view-channel">
+    <div class="channel-banner" id="channelBanner"></div>
+    <div class="channel-header" id="channelHeader"></div>
+    <div class="tabs" id="channelTabs">
+      <button class="tab active" data-ctab="videos" type="button">Videos</button>
+      <button class="tab" data-ctab="playlists" type="button">Playlists</button>
+    </div>
+    <div class="grid" id="channelVideoGrid"></div>
+    <div class="grid" id="channelPlaylistGrid" hidden></div>
+  </section>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <section hidden class="view" id="view-dashboard">
+    <h1 class="display-lg">Your channel</h1>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="view-header">
+      <h2 class="display-sm" style="margin:0;">Your videos</h2>
+      <a href="#/upload" class="btn btn-primary btn-sm">+ Publish new</a>
+    </div>
+    <div class="list" id="dashboardVideoList"></div>
+  </section>
+
+  <!-- ===================== PLAYLISTS ===================== -->
+  <section hidden class="view" id="view-playlists">
+    <h1 class="display-lg">Playlists</h1>
+    <form id="createPlaylistForm" class="inline-form">
+      <input type="text" name="name" placeholder="Playlist name" required />
+      <input type="text" name="description" placeholder="Description" required />
+      <button class="btn btn-primary btn-sm" type="submit">Create playlist</button>
+    </form>
+    <div class="grid" id="playlistGrid"></div>
+  </section>
+
+  <!-- ===================== PLAYLIST DETAIL ===================== -->
+  <section hidden class="view" id="view-playlist">
+    <button class="btn btn-ghost btn-sm back-btn" data-back type="button">&larr; Back</button>
+    <div id="playlistHeader" class="playlist-header"></div>
+    <div class="grid" id="playlistVideoGrid"></div>
+  </section>
+
+  <!-- ===================== HISTORY ===================== -->
+  <section hidden class="view" id="view-history">
+    <h1 class="display-lg">Watch history</h1>
+    <div class="grid" id="historyGrid"></div>
+  </section>
+
+  <!-- ===================== LIKED ===================== -->
+  <section hidden class="view" id="view-liked">
+    <h1 class="display-lg">Liked videos</h1>
+    <div class="grid" id="likedGrid"></div>
+  </section>
+
+  <!-- ===================== SUBSCRIPTIONS ===================== -->
+  <section hidden class="view" id="view-subscriptions">
+    <h1 class="display-lg">Following</h1>
+    <div class="two-col">
+      <div>
+        <h2 class="display-sm">Channels you follow</h2>
+        <div class="list" id="followingList"></div>
+      </div>
+      <div>
+        <h2 class="display-sm">Your subscribers</h2>
+        <div class="list" id="subscribersList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ACCOUNT ===================== -->
+  <section hidden class="view" id="view-account">
+    <h1 class="display-lg">Account settings</h1>
+    <div class="settings-grid">
+      <form id="accountDetailsForm" class="card-form">
+        <h2 class="display-sm">Profile details</h2>
+        <label class="field"><span>Full name</span><input type="text" name="fullName" required /></label>
+        <label class="field"><span>Email</span><input type="email" name="email" required /></label>
+        <button class="btn btn-primary btn-sm" type="submit">Save details</button>
+      </form>
+
+      <form id="passwordForm" class="card-form">
+        <h2 class="display-sm">Change password</h2>
+        <label class="field"><span>Current password</span><input type="password" name="oldPassword" required autocomplete="current-password" /></label>
+        <label class="field"><span>New password</span><input type="password" name="newPassword" required autocomplete="new-password" /></label>
+        <label class="field"><span>Confirm new password</span><input type="password" name="confirmPassword" required autocomplete="new-password" /></label>
+        <button class="btn btn-primary btn-sm" type="submit">Update password</button>
+      </form>
+
+      <form id="avatarForm" class="card-form">
+        <h2 class="display-sm">Avatar</h2>
+        <img id="avatarPreview" class="avatar-preview" alt="Current avatar" />
+        <label class="field"><span>New avatar image</span><input type="file" name="avatar" accept="image/*" required /></label>
+        <button class="btn btn-primary btn-sm" type="submit">Update avatar</button>
+      </form>
+
+      <form id="coverForm" class="card-form">
+        <h2 class="display-sm">Cover image</h2>
+        <img id="coverPreview" class="cover-preview" alt="Current cover image" />
+        <label class="field"><span>New cover image</span><input type="file" name="coverImage" accept="image/*" required /></label>
+        <button class="btn btn-primary btn-sm" type="submit">Update cover image</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalCloseBtn" type="button" aria-label="Close">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
