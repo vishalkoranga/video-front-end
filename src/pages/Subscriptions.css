@@ -1,0 +1,28 @@
+.subs-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.subs-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.subs-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.subs-row-name {
+  font-weight: 600;
+  font-size: 14.5px;
+}
+
+.subs-row-handle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}

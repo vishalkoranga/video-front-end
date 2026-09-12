@@ -1,0 +1,151 @@
+.comment-section {
+  margin-top: 8px;
+}
+
+.comment-heading {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.comment-form {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.comment-form-input {
+  flex: 1;
+}
+
+.comment-form-input textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-strong);
+  padding: 6px 2px 10px;
+  color: var(--paper);
+  resize: none;
+  font-family: var(--font-body);
+}
+
+.comment-form-input textarea:focus {
+  outline: none;
+  border-color: var(--marigold);
+}
+
+.comment-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 14px;
+}
+
+.comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.comment-author:hover {
+  color: var(--marigold-hover);
+}
+
+.comment-time {
+  color: var(--muted-dim);
+  font-size: 12px;
+}
+
+.comment-text {
+  font-size: 14.5px;
+  margin: 0 0 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.comment-edit textarea {
+  width: 100%;
+  background: var(--ink);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  color: var(--paper);
+  font-family: var(--font-body);
+  resize: vertical;
+}
+
+.comment-edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comment-error {
+  color: var(--rust-hover);
+  font-size: 12.5px;
+  margin: 4px 0;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.comment-like {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12.5px;
+  padding: 2px 0;
+}
+
+.comment-like:hover {
+  color: var(--paper);
+}
+
+.comment-like.is-liked {
+  color: var(--rust-hover);
+}
+
+.comment-action-text {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.comment-action-text:hover {
+  color: var(--paper);
+}
+
+.comment-action-danger:hover {
+  color: var(--rust-hover);
+}
