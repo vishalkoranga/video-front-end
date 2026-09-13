@@ -49,7 +49,7 @@ src/
    Edit `.env` if your backend isn't running on the default URL:
 
    ```
-   VITE_API_BASE=http://localhost:8000/api/v1
+   VITE_API_BASE =http://localhost:8000/api/v1
    ```
 
 3. **Run it:**

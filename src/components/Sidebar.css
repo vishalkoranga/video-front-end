@@ -1,0 +1,73 @@
+.sidebar {
+  width: 216px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 20px 10px;
+  position: sticky;
+  top: 65px;
+  align-self: flex-start;
+  height: calc(100vh - 65px);
+  overflow-y: auto;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 2px solid transparent;
+}
+
+.sidebar-link svg {
+  flex-shrink: 0;
+}
+
+.sidebar-link:hover {
+  background: var(--surface-hover);
+  color: var(--paper);
+}
+
+.sidebar-link.active {
+  background: var(--surface);
+  color: var(--paper);
+  font-weight: 600;
+  border-left-color: var(--marigold);
+}
+
+/* Collapse to an icon-only rail on medium screens rather than disappearing. */
+@media (max-width: 980px) {
+  .sidebar {
+    width: 60px;
+    padding: 16px 6px;
+  }
+  .sidebar-link {
+    justify-content: center;
+    padding: 12px 0;
+    border-left: none;
+    border-radius: var(--radius-sm);
+  }
+  .sidebar-link.active {
+    background: var(--surface);
+  }
+  .sidebar-link span {
+    display: none;
+  }
+}
+
+/* Below this width the account dropdown remains the way in, keeping the
+   layout uncluttered on phones. */
+@media (max-width: 640px) {
+  .sidebar {
+    display: none;
+  }
+}
